@@ -182,6 +182,7 @@ $(".list-group").on("change", "input[type='text']", function () {
 	auditTask($(taskSpan).closest(".list-group-item"));
 });
 
+
 $(".card .list-group").sortable({
 	connectWith: $(".card .list-group"),
 	scroll: false,
