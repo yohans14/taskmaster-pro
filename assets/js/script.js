@@ -31,7 +31,6 @@ var loadTasks = function () {
 	// loop over object properties
 	$.each(tasks, function (list, arr) {
 		console.log(list, arr);
-		dc``;
 		// then loop over sub-array
 		arr.forEach(function (task) {
 			createTask(task.text, task.date, list);
@@ -43,15 +42,51 @@ var saveTasks = function () {
 	localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
-// todo description was clicked
+// modal was triggered
+$("#task-form-modal").on("show.bs.modal", function () {
+	// clear values
+	$("#modalTaskDescription, #modalDueDate").val("");
+});
+
+// modal is fully visible
+$("#task-form-modal").on("shown.bs.modal", function () {
+	// highlight textarea
+	$("#modalTaskDescription").trigger("focus");
+});
+
+// save button in modal was clicked
+$("#task-form-modal .btn-primary").click(function () {
+	// get form values
+	var taskText = $("#modalTaskDescription").val();
+	var taskDate = $("#modalDueDate").val();
+
+	if (taskText && taskDate) {
+		createTask(taskText, taskDate, "toDo");
+
+		// close modal
+		$("#task-form-modal").modal("hide");
+
+		// save in tasks array
+		tasks.toDo.push({
+			text: taskText,
+			date: taskDate,
+		});
+
+		saveTasks();
+	}
+});
+
+// task text was clicked
 $(".list-group").on("click", "p", function () {
 	var text = $(this).text().trim();
 	var textInput = $("<textarea>").addClass("form-control").val(text);
 	$(this).replaceWith(textInput);
 
+	// auto focus new element
 	textInput.trigger("focus");
 });
 
+// editable field was un-focused
 $(".list-group").on("blur", "textarea", function () {
 	// get the textarea's current value/text
 	var text = $(this).val().trim();
@@ -111,40 +146,6 @@ $(".list-group").on("blur", "input[type='text']", function () {
 
 	// replace input with span element
 	$(this).replaceWith(taskSpan);
-});
-
-// modal was triggered
-$("#task-form-modal").on("show.bs.modal", function () {
-	// clear values
-	$("#modalTaskDescription, #modalDueDate").val("");
-});
-
-// modal is fully visible
-$("#task-form-modal").on("shown.bs.modal", function () {
-	// highlight textarea
-	$("#modalTaskDescription").trigger("focus");
-});
-
-// save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function () {
-	// get form values
-	var taskText = $("#modalTaskDescription").val();
-	var taskDate = $("#modalDueDate").val();
-
-	if (taskText && taskDate) {
-		createTask(taskText, taskDate, "toDo");
-
-		// close modal
-		$("#task-form-modal").modal("hide");
-
-		// save in tasks array
-		tasks.toDo.push({
-			text: taskText,
-			date: taskDate,
-		});
-
-		saveTasks();
-	}
 });
 
 // remove all tasks
