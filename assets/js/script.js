@@ -1,6 +1,6 @@
 var tasks = {};
 $("#modalDueDate").datepicker({
-	minDate: 1,
+	minDate: 0,
 });
 var createTask = function (taskText, taskDate, taskList) {
 	// create elements that make up a task item
@@ -147,7 +147,7 @@ $(".list-group").on("click", "span", function () {
 
 	// enable jquery ui datepicker
 	dateInput.datepicker({
-		minDate: 1,
+		minDate: 0,
 		onClose: function () {
 			// when calendar is closed, force a "change" event on the `dateInput`
 			$(this).trigger("change");
