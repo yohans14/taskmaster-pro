@@ -26,8 +26,8 @@ var auditTask = function (taskEl) {
 
 	// convert to moment object at 5:00pm
 	var time = moment(date, "L").set("hour", 17);
-  // this should print out an object for the value of the date variable, but at 5:00pm of that date
-  console.log(time);
+	// this should print out an object for the value of the date variable, but at 5:00pm of that date
+	// console.log(time);
 	// remove any old classes from element
 	$(taskEl).removeClass("list-group-item-warning list-group-item-danger");
 
@@ -37,6 +37,7 @@ var auditTask = function (taskEl) {
 	} else if (Math.abs(moment().diff(time, "days")) <= 2) {
 		$(taskEl).addClass("list-group-item-warning");
 	}
+	// console.log(taskEl);
 };
 
 var loadTasks = function () {
@@ -79,7 +80,7 @@ $("#task-form-modal").on("shown.bs.modal", function () {
 });
 
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function () {
+$("#task-form-modal .btn-save").click(function () {
 	// get form values
 	var taskText = $("#modalTaskDescription").val();
 	var taskDate = $("#modalDueDate").val();
@@ -183,24 +184,25 @@ $(".list-group").on("change", "input[type='text']", function () {
 	auditTask($(taskSpan).closest(".list-group-item"));
 });
 
-
 $(".card .list-group").sortable({
 	connectWith: $(".card .list-group"),
 	scroll: false,
 	tolerance: "pointer",
 	helper: "clone",
-	// activate: function (event) {
-	// 	console.log("activate", this);
-	// },
-	// deactivate: function (event) {
-	// 	console.log("deactivate", this);
-	// },
-	// over: function (event) {
-	// 	console.log("over", event.target);
-	// },
-	// out: function (event) {
-	// 	console.log("out", event.target);
-	// },
+	activate: function (event) {
+		$(this).addClass("dropover");
+		$(".bottom-trash").addClass("bottom-trash-drag");
+	},
+	deactivate: function (event) {
+		$(this).removeClass("dropover");
+		$(".bottom-trash").removeClass("bottom-trash-drag");
+	},
+	over: function (event) {
+		$(this).addClass("dropover-active");
+	},
+	out: function (event) {
+		$(this).removeClass("dropover-active");
+	},
 	update: function (event) {
 		var tempArr = [];
 		// loop over current set of children in sortable list
@@ -230,13 +232,12 @@ $("#trash").droppable({
 	tolerance: "touch",
 	drop: function (event, ui) {
 		ui.draggable.remove();
-		console.log("drop");
 	},
 	over: function (event, ui) {
-		console.log("over");
+		$("bottom-trash").addClass("bottom-trash-active");
 	},
 	out: function (event, ui) {
-		console.log("out");
+		$("bottom-trash").removeClass("bottom-trash-active");
 	},
 });
 // remove all tasks
@@ -250,3 +251,13 @@ $("#remove-tasks").on("click", function () {
 
 // load tasks for the first time
 loadTasks();
+
+// setTimeout(function () {
+// 	alert("This message happen after 5 seconds!");
+// }, 5000);
+
+setInterval(function () {
+	$(".card .list-group-item").each(function (index, el) {
+		auditTask(el);
+	});
+}, 1800000);
