@@ -26,7 +26,8 @@ var auditTask = function (taskEl) {
 
 	// convert to moment object at 5:00pm
 	var time = moment(date, "L").set("hour", 17);
-
+  // this should print out an object for the value of the date variable, but at 5:00pm of that date
+  console.log(time);
 	// remove any old classes from element
 	$(taskEl).removeClass("list-group-item-warning list-group-item-danger");
 
